@@ -1,17 +1,25 @@
 import React from "react";
+import { View, Text, ActivityIndicator, FlatList } from "react-native";
 import useFetch from "./useFetch";
 
-function App() {
-  const { data, error, loading } = useFetch("https://api.example.com/items");
+export default function App() {
+  const { data, loading, error } = useFetch("https://api.example.com/items");
 
-  if (loading) return <p>Carregando...</p>;
-  if (error) return <p>Ocorreu um erro: {error.message}</p>;
+  if (loading) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  }
+
+  if (error) {
+    return <Text>Erro: {error.message}</Text>;
+  }
 
   return (
-    <ul>
-      {data.map((item) => (
-        <li key={item.id}>{item.name}</li>
-      ))}
-    </ul>
+    <FlatList
+      data={data}
+      keyExtractor={(item) => item.id.toString()}
+      renderItem={({ item }) => (
+        <Text style={{ padding: 10 }}>{item.name}</Text>
+      )}
+    />
   );
 }
